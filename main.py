@@ -5,14 +5,14 @@ headers = {
 }
 
 
-__version__ = 'v0.1.1'
+__version__ = 'v0.1.2'
 
 
 def get_articles():
     file_with_link = 'link.txt'
     file_with_articles = 'articles.txt'
 
-    if os.path.exists(file_with_articles) is False:
+    if exists(file_with_articles) is False:
         with open(file_with_articles, 'a') as file:
             file.write('')
             file.close()
@@ -26,7 +26,7 @@ def get_articles():
 
     for page_now in range(1, 5):
         mas_articles = []
-        page = requests.get(url_main)
+        page = get_req(url_main)
         soup = BeautifulSoup(page.content, 'html.parser')
 
         for line in soup.findAll('a', href=True):
@@ -45,10 +45,10 @@ def get_articles():
                     articles_file.write(article)
                     articles_file.write('\n')
                 if _platform == "darwin":
-                    os.system("clear && printf '\e[3J'")
+                    system("clear && printf '\e[3J'")
                 elif _platform == 'linux':
-                    os.system('clear')
-                print('Собрано: ', s)
+                    system('clear')
+                print('Собрано артикулов: ', s)
         url_main = url_main.replace("page=" + str(page_now), "page=" + str(page_now + 1))
     input("\n\n Press \'Enter\'")
 
@@ -56,8 +56,9 @@ def get_articles():
 if __name__ == '__main__':
     try:
         from bs4 import BeautifulSoup
-        import requests
-        import os
+        from requests import get as get_req
+        from os import system
+        from os.path import exists
         from sys import platform as _platform
         get_articles()
     except ModuleNotFoundError as error:
