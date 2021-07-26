@@ -11,7 +11,7 @@ headers = {
 }
 
 
-__version__ = 'v0.1.7'
+__version__ = 'v0.1.8'
 
 # Константы логирования
 FIELDS_LOG_FILE = ['version', 'date', 'cause', 'status']
@@ -56,7 +56,6 @@ def get_articles():
     # Инициализация перехода по страницам
     write_log('Сбор данных', 'Run')
     for page_now in range(1, 10):
-        mas_articles = []
         page = get_req(url_main)
         soup = BeautifulSoup(page.content, 'html.parser')
 
@@ -71,7 +70,6 @@ def get_articles():
                         break
                     else:
                         article += number
-                mas_articles.append(article)
                 # Запись артикулов в файл
                 with open(file_with_articles, 'a') as articles_file:
                     articles_file.write(article)
@@ -82,6 +80,7 @@ def get_articles():
     if cnt == 0:
         write_log('Артикулы не собраны', 'Fail')
         print('Артикулы не собраны. Возможно, проблема в ссылке')
+        write_log('Работа завершена', 'PASS')
         quit()
     else:
         write_log('Артикулы собраны', 'OK')
