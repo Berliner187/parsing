@@ -5,14 +5,15 @@ import datetime
 from csv import DictWriter, DictReader
 
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                  'Chrome/91.0.4472.114 Safari/537.36'
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) '
+    'AppleWebKit/537.36 (KHTML, like Gecko) '
+    'Chrome/83.0.4103.141 Safari/537.36'
 }
 
 
-__version__ = 'v0.1.4'
+__version__ = 'v0.1.5'
 
-
+# Константы логирования
 FIELDS_LOG_FILE = ['version', 'date', 'cause', 'status']
 FILE_LOG = 'file.log'
 
@@ -51,8 +52,9 @@ def get_articles():
 
     url_main = open(file_with_link).readline()
     s = 0
-
-    for page_now in range(1, 5):
+    # Инициализация перехода по страницам
+    write_log('Сбор данных', 'Run')
+    for page_now in range(1, 10):
         mas_articles = []
         page = get_req(url_main)
         soup = BeautifulSoup(page.content, 'html.parser')
@@ -69,17 +71,22 @@ def get_articles():
                     else:
                         article += number
                 mas_articles.append(article)
+                # Запись артикулов в файл
                 with open(file_with_articles, 'a') as articles_file:
                     articles_file.write(article)
                     articles_file.write('\n')
-                if _platform == "darwin":
-                    system("clear && printf '\e[3J'")
-                elif _platform == 'linux':
-                    system('clear')
+                system("clear")
                 print('Собрано артикулов: ', s)
         url_main = url_main.replace("page=" + str(page_now), "page=" + str(page_now + 1))
-    write_log('Успешно', 'OK')
-    input("\n\n Нажмите \'Enter\'")
+    if s == 0:
+        write_log('Артикулы не собраны', 'Fail')
+        print('Артикулы не собраны. Возможно, проблема в ссылке')
+        quit()
+    else:
+        write_log('Артикулы собраны', 'OK')
+        print('\n Собранные артикулы находятся в', file_with_articles)
+        write_log('Успешно', 'OK')
+        input("\n\n Нажмите \'Enter\'")
 
 
 def write_log(cause, status_itself):
@@ -113,12 +120,12 @@ if __name__ == '__main__':
         from sys import platform as _platform
         write_log('Запуск программы', 'Run')
         get_articles()
-        write_log('Exit', 'OK')
+        write_log('Работа завершена', 'OK')
     except ModuleNotFoundError as error:
         write_log(error, 'Fail')
         error = str(error)
         print('Установите отсутствующий/отсутствующие модуль/модули', error[15:], 'через PIP')
-        print('\n Для установки всех отсутвующих модулей, введите команду в терминале:')
+        print('\n Для установки всех отсутвующих модулей введите команду в терминале:')
         print('pip3 install -r requirements.txt')
     except Exception as error_r:
         write_log(error_r, 'FAIL')
