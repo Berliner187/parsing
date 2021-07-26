@@ -5,12 +5,17 @@ headers = {
 }
 
 
-__version__ = 'v0.1.2'
+__version__ = 'v0.1.3'
 
 
 def get_articles():
     file_with_link = 'link.txt'
     file_with_articles = 'articles.txt'
+    if exists(file_with_link) is False:
+        with open(file_with_link, 'a') as file:
+            file.write('')
+            file.close()
+        print("Откройте файл \'" + file_with_link + "\' и добавьте ссылку WB")
 
     if exists(file_with_articles) is False:
         with open(file_with_articles, 'a') as file:
@@ -63,6 +68,6 @@ if __name__ == '__main__':
         get_articles()
     except ModuleNotFoundError as error:
         error = str(error)
-        print('Установите отсутствующий модуль', error[15:], 'через PIP')
-        print('Для этого нужно ввести команду в терминале:')
-        print('\n python -m pip install -r requirements.txt')
+        print('Установите отсутствующий/отсутствующие модуль/модули', error[15:], 'через PIP')
+        print('\n Для установки всех отсутвующих модулей, введите команду в терминале:')
+        print('pip3 install -r requirements.txt')
