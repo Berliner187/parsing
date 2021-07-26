@@ -11,7 +11,7 @@ headers = {
 }
 
 
-__version__ = 'v0.1.6'
+__version__ = 'v0.1.7'
 
 # Константы логирования
 FIELDS_LOG_FILE = ['version', 'date', 'cause', 'status']
@@ -44,11 +44,12 @@ def get_articles():
         with open(file_with_articles, 'a') as file:
             file.write('')
             file.close()
+        write_log('Файл артикулов создан', 'OK')
     else:
         with open(file_with_articles, 'w') as file:
             file.write('')
             file.close()
-        write_log('Перезапись артикулов', 'OK')
+        write_log('Файл артикулов очищен', 'OK')
 
     url_main = open(file_with_link).readline()
     cnt = 0
@@ -117,7 +118,6 @@ if __name__ == '__main__':
     try:
         from bs4 import BeautifulSoup
         from requests import get as get_req
-        from sys import platform as _platform
         write_log('Запуск программы', 'Run')
         get_articles()
         write_log('Работа завершена', 'OK')
