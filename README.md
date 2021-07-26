@@ -1,2 +1,2 @@
-# parsing
+# Парсер артикулов Wildberries
  

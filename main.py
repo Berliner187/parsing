@@ -11,7 +11,7 @@ headers = {
 }
 
 
-__version__ = 'v0.1.5'
+__version__ = 'v0.1.6'
 
 # Константы логирования
 FIELDS_LOG_FILE = ['version', 'date', 'cause', 'status']
@@ -51,7 +51,7 @@ def get_articles():
         write_log('Перезапись артикулов', 'OK')
 
     url_main = open(file_with_link).readline()
-    s = 0
+    cnt = 0
     # Инициализация перехода по страницам
     write_log('Сбор данных', 'Run')
     for page_now in range(1, 10):
@@ -61,7 +61,7 @@ def get_articles():
 
         for line in soup.findAll('a', href=True):
             if "detail.aspx?" in line["href"]:
-                s += 1
+                cnt += 1
                 article_url = line['href']
                 article_url = article_url[9::]
                 article = ''
@@ -76,9 +76,9 @@ def get_articles():
                     articles_file.write(article)
                     articles_file.write('\n')
                 system("clear")
-                print('Собрано артикулов: ', s)
+                print('Собрано артикулов: ', cnt)
         url_main = url_main.replace("page=" + str(page_now), "page=" + str(page_now + 1))
-    if s == 0:
+    if cnt == 0:
         write_log('Артикулы не собраны', 'Fail')
         print('Артикулы не собраны. Возможно, проблема в ссылке')
         quit()
